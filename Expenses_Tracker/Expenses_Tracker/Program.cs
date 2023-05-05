@@ -27,6 +27,8 @@ namespace ExpenseTracker
         {
             string title = "";
             string description = "";
+            double amount = 0;
+            //DateTime date = new DateTime();
             try
             {
                 Console.Write("Enter Title: ");
@@ -35,7 +37,7 @@ namespace ExpenseTracker
                 Console.Write("Enter Description: ");
                 description = Console.ReadLine();
 
-                if (string.IsNullOrEmpty(title))
+                if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(description))
                 {
                     throw new EmptyException();
                 }
@@ -45,11 +47,17 @@ namespace ExpenseTracker
                 Console.WriteLine("Fields should not be empty");
                 return;
             }
-
-            Console.Write("Enter Amount: ");
-            double amount = Convert.ToDouble(Console.ReadLine());
             
-            //amount = amount < 0 ? amount : amount;
+            try
+            {
+                Console.Write("Enter Amount: ");
+                amount = Convert.ToDouble(Console.ReadLine());
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Enter only integer value");
+                return;
+            }
 
             Console.Write("Enter Date (dd-MM-yyyy): ");
             DateTime date = Convert.ToDateTime(Console.ReadLine());
@@ -66,7 +74,7 @@ namespace ExpenseTracker
             {
                 if (transaction.Amount < 0)
                 {
-                    Console.WriteLine($"Title:{transaction.Title}, Description:{transaction.Description}, Amount:{transaction.Amount}, Date:{transaction.Date.ToString("dd-MM-yyyy")})");
+                    Console.WriteLine($"Title:{transaction.Title}, Description:{transaction.Description}, Amount:{Math.Abs(transaction.Amount)}, Date:{transaction.Date.ToString("dd-MM-yyyy")})");
                 }
             }
         }
@@ -91,7 +99,7 @@ namespace ExpenseTracker
                 balance += transaction.Amount;
             }
 
-            Console.WriteLine($"Available Balance: {balance}");
+            Console.WriteLine($"Available Balance: {Math.Abs(balance)}");
         }
     }
 
